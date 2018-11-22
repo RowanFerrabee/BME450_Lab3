@@ -5,6 +5,8 @@ clear;
 % orientation_data = xlsread("BME450_Lab3 - IMU.xlsx", "Sensor Orientation Quaternions");
 % gyro_data = xlsread("BME450_Lab3 - IMU.xlsx", "Sensor Angular Velocity");
 % segment_gyro_data = xlsread("BME450_Lab3 - IMU.xlsx", "Segment Angular Velocity");
+% segment_marker_pos = xlsread("BME450_Lab3 - Camera.xlsx", "Segment Marker Positions");
+% joint_angles = xlsread("BME450_Lab3 - IMU.xlsx", "Joint Angle");
 load imu_data.mat
 
 %% 
@@ -135,4 +137,21 @@ figure(3);
  ylabel("Angular Velocities (rad/s)")
  hold off;
 
-    
+%% P4 Stuff
+
+right_hip_angle_idx = 4;
+left_hip_angle_idx = 16;
+left_thigh_marker_idx = 16:17;
+right_thigh_marker_idx = 19:20;
+
+if (right_not_left)
+    hip_angle_idx = right_hip_angle_idx;
+    thigh_marker_idx = right_thigh_marker_idx;
+else
+    hip_angle_idx = left_hip_angle_idx;
+    thigh_marker_idx = left_thigh_marker_idx;
+end
+
+thigh_positions = segment_marker_pos(:,thigh_marker_idx);
+
+par = CircleFitByTaubin(thigh_positions);
